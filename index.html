@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мой облачный проект</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .form-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            transform: scale(1);
+            transition: transform 0.3s ease;
+        }
+        
+        .form-container:hover {
+            transform: scale(1.02);
+        }
+        
+        h3 {
+            text-align: center;
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+            background-color: white;
+        }
+        
+        input::placeholder {
+            color: #999;
+            font-size: 15px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 16px;
+            background: #f4b400;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 18px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(244, 180, 0, 0.3);
+            border: 2px solid #4CAF50;
+        }
+        
+        button:hover {
+            background: #4CAF50;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+            border-color: #f4b400;
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        /* Стили для сообщения об успехе/ошибке */
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+            font-weight: 500;
+        }
+        
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h3>🚀 Отправить заявку</h3>
+    <form id="feedbackForm">
+        <input type="text" id="userName" placeholder="Ваше имя" required>
+        <input type="email" id="userEmail" placeholder="Ваш Email" required>
+        <button type="submit">📤 Отправить в облако</button>
+    </form>
+    <div id="messageBox" class="message"></div>
+</div>
+
+<script type="module">
+// Импортируем модули Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+// ТВОИ КЛЮЧИ СО СКРИНШОТА
+const firebaseConfig = {
+    apiKey: "AIzaSyDImR-lwN-EaxHpK0kZ4jamgmlT9Vsqld8",
+    authDomain: "amamina.firebaseapp.com",
+    projectId: "amamina",
+    storageBucket: "amamina.firebasestorage.app",
+    messagingSenderId: "201925983071",
+    appId: "1:201925983071:web:0562243fe8bff512dfd4ea",
+    measurementId: "G-J41Z9MFML4"
+};
+
+// Инициализация
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Логика кнопки
+document.getElementById("feedbackForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    const nameInput = document.getElementById("userName").value;
+    const emailInput = document.getElementById("userEmail").value;
+    const messageBox = document.getElementById("messageBox");
+    
+    // Убираем предыдущие сообщения
+    messageBox.className = "message";
+    
+    try {
+        // Запись в коллекцию "requests"
+        await addDoc(collection(db, "requests"), {
+            name: nameInput,
+            email: emailInput,
+            timestamp: new Date()
+        });
+        
+        // Показываем успешное сообщение
+        messageBox.className = "message success";
+        messageBox.textContent = "✅ Готово! Данные сохранены в Firebase.";
+        document.getElementById("feedbackForm").reset();
+        
+        // Скрываем сообщение через 3 секунды
+        setTimeout(() => {
+            messageBox.className = "message";
+        }, 3000);
+        
+    } catch (error) {
+        console.error("Ошибка записи: ", error);
+        
+        // Показываем сообщение об ошибке
+        messageBox.className = "message error";
+        messageBox.textContent = "❌ Ошибка при отправке. Попробуйте снова.";
+    }
+});
+</script>
+
+</body>
+</html>
