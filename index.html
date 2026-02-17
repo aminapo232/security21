@@ -116,11 +116,11 @@
 <body>
 
 <div class="form-container">
-    <h3>🚀 Отправить заявку</h3>
+    <h3>Отправить заявку</h3>
     <form id="feedbackForm">
         <input type="text" id="userName" placeholder="Ваше имя" required>
         <input type="email" id="userEmail" placeholder="Ваш Email" required>
-        <button type="submit">📤 Отправить в облако</button>
+        <button type="submit">Отправить в облако</button>
     </form>
     <div id="messageBox" class="message"></div>
 </div>
@@ -166,7 +166,7 @@ document.getElementById("feedbackForm").addEventListener("submit", async (e) => 
         
         // Показываем успешное сообщение
         messageBox.className = "message success";
-        messageBox.textContent = "✅ Готово! Данные сохранены в Firebase.";
+        messageBox.textContent = "Готово! Данные сохранены в Firebase.";
         document.getElementById("feedbackForm").reset();
         
         // Скрываем сообщение через 3 секунды
@@ -179,7 +179,7 @@ document.getElementById("feedbackForm").addEventListener("submit", async (e) => 
         
         // Показываем сообщение об ошибке
         messageBox.className = "message error";
-        messageBox.textContent = "❌ Ошибка при отправке. Попробуйте снова.";
+        messageBox.textContent = "Ошибка при отправке. Попробуйте снова.";
     }
 });
 </script>
